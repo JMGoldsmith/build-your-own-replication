@@ -80,6 +80,110 @@ resource "docker_image" "vault" {
 }
 ```
 
+The last piece in this file is the `docker_container`. There are multiple parts to this resource that are important. First we will look at the overall resource.
+
+resource "docker_container" "vault" {
+  count    = 1
+  name     = "vault-${count.index}"
+  image    = docker_image.vault.latest
+  env      = ["SKIP_CHOWN", "VAULT_ADDR=http://127.0.0.1:8200", "VAULT_LICENSE=${var.vault_license}"]
+  command  = ["vault", "server", "-log-level=trace", "-config=/vault/config"]
+  hostname = "vault-${count.index}"
+  must_run = true
+
+  capabilities {
+    add = ["IPC_LOCK"]
+  }
+
+  healthcheck {
+    test         = ["CMD", "vault", "status"]
+    interval     = "10s"
+    timeout      = "15s"
+    start_period = "10s"
+    retries      = 15
+  }
+
+  ports {
+    internal = "8200"
+    external = format("82%d0", count.index)
+    protocol = "tcp"
+  }
+
+  networks_advanced {
+    name         = "repl-network"
+    ipv4_address = "10.42.10.20${count.index}"
+  }
+
+  upload {
+    content = templatefile("${path.cwd}/config/vault.tftpl", { node_id = count.index })
+    file    = "/vault/config/server.hcl"
+  }
+
+  upload {
+    content = templatefile("${path.cwd}/config/vault.hclic", {})
+    file    = "/vault/config/vault.hclic"
+  }
+
+  volumes {
+    host_path      = "${path.cwd}/raft/raft-${count.index}"
+    container_path = "/var/raft"
+  }
+
+  volumes {
+    host_path      = "${path.cwd}/logs/vault-audit-log-${count.index}"
+    container_path = "/vault/logs"
+  }
+}
+
+A lot of the pieces in this resource are configured so that we can iterate on the file later to make this in to a cluster. At this time, we only want a single node, however.
+
+The first section is the main section of the resource:
+
+```
+  count    = 1
+  name     = "vault-${count.index}"
+  image    = docker_image.vault.latest
+  env      = ["SKIP_CHOWN", "VAULT_ADDR=http://127.0.0.1:8200", "VAULT_LICENSE=${var.vault_license}"]
+  command  = ["vault", "server", "-log-level=trace", "-config=/vault/config"]
+  hostname = "vault-${count.index}"
+  must_run = true
+```
+
+The count tells us that we want a single container built. The `name` is to name the container properly. Notice how we set the name to include a numerical value from the count index. This will always start at 0. The `image` is a reference to the `docker_image` resource we declared earlier. The `env` section sets the environment variables in the container. The `command` section runs the command to start Vault. The `hostname` is the same as the name. `must_run` ensures the container will run when loaded.
+
+```
+ capabilities {
+    add = ["IPC_LOCK"]
+  }
+```
+
+The next section, `capabilities`, sets the capabilities for the container. Here, we set it to `IPC_LOCK`.
+
+```
+  healthcheck {
+    test         = ["CMD", "vault", "status"]
+    interval     = "10s"
+    timeout      = "15s"
+    start_period = "10s"
+    retries      = 15
+  }
+
+  ports {
+    internal = "8200"
+    external = format("82%d0", count.index)
+    protocol = "tcp"
+  }
+
+  networks_advanced {
+    name         = "repl-network"
+    ipv4_address = "10.42.10.20${count.index}"
+  }
+```
+
+The next section is your `healthcheck` section along with your port declarations and docker network settings. This allows you to configure how you can access the container inside and outside of container network. 
+
+
+
 
 ### vars.tf
 ### Init.sh
