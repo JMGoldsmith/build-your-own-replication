@@ -46,8 +46,10 @@ terraform {
   required_version = ">= 0.13"
   required_providers {
     docker = {
-      source  = "kreuzwerker/docker"
-      version = "2.23.0"
+      source = "kreuzwerker/docker"
+    }
+    template = {
+      source = "hashicorp/template"
     }
   }
   backend "local" {
@@ -287,6 +289,7 @@ Use this to init your cluster. For this exercise, we will start out with the fol
 #!/bin/bash
 
 export VAULT_ADDR="http://127.0.0.1:8200"
+terraform init
 terraform apply -auto-approve
 
 vault operator init -key-shares=1 -key-threshold=1 > vault/vault.tmp
@@ -309,7 +312,8 @@ rm raft/raft-0/vault.db
 rm raft/raft-0/raft/raft.db
 ```
 
-### Config directory
+### Interacting with your new cluster.
 
-vault.hclic
+Currently you will need to set `export VAULT_ADDR="http://127.0.0.1:8200"` in your terminal as well. In later exercises we will have this set in to your shell.
 
+Interacting with Vault can be done from the CLI, such as using `vault status`

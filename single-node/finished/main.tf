@@ -2,8 +2,10 @@ terraform {
   required_version = ">= 0.13"
   required_providers {
     docker = {
-      source  = "kreuzwerker/docker"
-      version = "2.23.0"
+      source = "kreuzwerker/docker"
+    }
+    template = {
+      source = "hashicorp/template"
     }
   }
   backend "local" {
@@ -57,13 +59,13 @@ resource "docker_container" "vault" {
 
   ports {
     internal = "8200"
-    external = format("82%d0", count.index)
+    external = "8200"
     protocol = "tcp"
   }
 
   networks_advanced {
     name         = "repl-network"
-    ipv4_address = "10.42.10.20${count.index}"
+    ipv4_address = "10.42.10.200"
   }
 
   upload {
