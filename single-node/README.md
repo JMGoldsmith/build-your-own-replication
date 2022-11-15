@@ -295,7 +295,7 @@ terraform apply -auto-approve
 vault operator init -key-shares=1 -key-threshold=1 > vault/vault.tmp
 ```
 
-This will export your VAULT_ADDR address, run Terraform and then initialize Vault, storing the keys in the `vault/
+This will export your VAULT_ADDR address, run Terraform and then initialize Vault, storing the unseal and root keys in the `vault/vault.tmp` file.
 
 ### Teardown.sh
 
@@ -317,3 +317,11 @@ rm raft/raft-0/raft/raft.db
 Currently you will need to set `export VAULT_ADDR="http://127.0.0.1:8200"` in your terminal as well. In later exercises we will have this set in to your shell.
 
 Interacting with Vault can be done from the CLI, such as using `vault status`
+
+### Accessing the container
+
+Accessing the container itself can be done by running `docker exec -it vault-0 /bin/sh`. This will give you direct access to the Vault server for additional testing.
+
+### Next lessons
+
+Your first Integrated Storage cluster, managing Vault with Terraform, Consul backed storage, and cloud hosted instances for more advanced replication.
