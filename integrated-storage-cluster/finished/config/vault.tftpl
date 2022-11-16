@@ -1,0 +1,19 @@
+api_addr      = "http://10.42.10.20${node_id}:8200"
+cluster_addr  = "http://10.42.10.20${node_id}:8201"
+cluster_name  = "repl"
+log_level     = "trace"
+ui            = true
+disable_mlock = true
+license_path = "/vault/config/vault.hclic"
+
+storage "raft" {
+  path    = "/var/raft/"
+  node_id = ${node_id}
+}
+
+listener "tcp" {
+  address     = "0.0.0.0:8200"
+  cluster_address = "0.0.0.0:8201"
+  tls_disable = 1
+}
+

@@ -1,0 +1,8 @@
+tfstate/*
+config/vault.hclic
+.terraform.lock.hcl
+notes
+vault/
+raft/
+logs/
+.terraform
