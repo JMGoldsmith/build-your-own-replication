@@ -7,7 +7,6 @@ terraform {
     template = {
       source = "hashicorp/template"
     }
-    required_version = ">= 0.13"
   }
   backend "local" {
     path = "tfstate/terraform.tfstate"
