@@ -97,7 +97,7 @@ By default, vault-0 will be the leader node at the end of the joining. You can a
 export VAULT_ADDR="http://127.0.0.1:8200"
 vault audit enable file file_path=/vault/logs/vault_audit.log
 ```
-
+This tutorial does not utilize the `retry_join` stanza. We leave it up to you if you wish to enable this, but highly recommend you do so as an exercise.
 
 ## Teardown.sh
 
