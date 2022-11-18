@@ -120,4 +120,4 @@ rm raft/raft-2/raft/raft.db
 
 ## Run it!
 
-Go ahead and build the cluster! You will need to run the `./teardown.sh` file on your single node first, however.
+Go ahead and build the cluster by running `./init.sh`! You will need to run the `./teardown.sh` file on your single node first, however.
