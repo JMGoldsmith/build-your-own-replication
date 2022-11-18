@@ -23,7 +23,7 @@ In the previous tutorial, you declared the ports individually. Unfortunately thi
 
 It is important to know these ports as to interact with that node through the Vault CLI you will need to export the `VAULT_ADDR="http://127.0.0.1:8200"` for the first node, `VAULT_ADDR="http://127.0.0.1:8210"` for the second node, and `VAULT_ADDR="http://127.0.0.1:8220"` for the third node.
 
-### networks_advnaced
+### networks_advanced
 
 The docker container has a reference to `networks_advanced` that will need an adjustment. As each container will need its own IP address, we can change the `ipv4_address` to take in to account the `count.index` for each unique container.
 
