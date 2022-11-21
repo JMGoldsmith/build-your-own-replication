@@ -1,5 +1,7 @@
 # Building a single node in Vault using Docker.
 
+This tutorial is built upon the expectation that you have completed your onboarding and gone through setting up a Vault node on your local desktop. 
+
 ## Tools you need
 
 Docker desktop - Download from https://www.docker.com/products/docker-desktop/
@@ -58,7 +60,7 @@ terraform {
 }
 ```
 
-This sets the Terraform version and where you store your state file. In this case, we will store it locally. It should be at the top of any Terraform project. This also sets up the required provider for the docker provider.
+This sets the Terraform version and where you store your state file. In this case, we will store it locally. It should be at the top of any Terraform project. This also sets up the [required provider](https://registry.terraform.io/providers/kreuzwerker/docker/latest/docs) for the docker provider.
 
 We will then declare the provider:
 
