@@ -37,14 +37,3 @@ vault operator unseal $key_value
 
 sleep 10
 vault operator raft list-peers
-### Make array based on number of nodes(get from query or input?)
-### Take out existing leader node ID
-### Join others based on remaining items in array.
-
-
-## Enable audit devices
-
-# vault audit enable file file_path=/vault/logs/vault_audit.log
-
-## Enable a few engines
-
