@@ -20,8 +20,8 @@ provider "docker" {
 # -----------------------------------------------------------------------
 # Custom network
 # -----------------------------------------------------------------------
-resource "docker_network" "repl_network" {
-  name       = "repl-network"
+resource "docker_network" "raft_network" {
+  name       = "raft-network"
   attachable = true
   ipam_config { subnet = "10.42.10.0/16" }
 }
@@ -64,7 +64,7 @@ resource "docker_container" "vault" {
   }
 
   networks_advanced {
-    name         = "repl-network"
+    name         = "raft-network"
     ipv4_address = "10.42.10.200"
   }
 
