@@ -9,3 +9,7 @@ variable "vault_license" {
 variable "vault_version" {
   default = "1.11.1-ent"
 }
+
+variable "network_cidr" {
+  default = ""
+}
