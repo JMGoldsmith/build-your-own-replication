@@ -23,7 +23,7 @@ provider "docker" {
 resource "docker_network" "raft_network" {
   name       = "raft-network"
   attachable = true
-  ipam_config { subnet = "10.42.10.0/16" }
+  ipam_config { subnet = var.network_cidr != "" ? var.network_cidr : "10.42.10.0/16" } 
 }
 
 

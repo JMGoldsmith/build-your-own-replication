@@ -14,4 +14,4 @@ We are using Terraform to manage this cluster for various reasons. It will not o
 
 # Saving your work as terraform.
 
-It is highly recommended to create a repository on github and save your work there. Being able to revert back to an early reference, keep customer environments as seperate branches, and maanging your state, are crucial here. 
+It is highly recommended to create a repository on github and save your work there. Being able to revert back to an early reference, keep customer environments as seperate branches, and managing your state, are crucial here. 

@@ -30,7 +30,7 @@ This prevents your terraform state, license, and various Vault related DBs to be
 
 Now that you have created your `.gitignore` file, lets get building. In order to be able to quickly build and teardown your instances we will be using Terraform to manage the state of the node you are building. This will come in handy as you build out more environments to replicate certain customers issues. In future lessons, Terraform will also be used to manage Vault itself.
 
-### Main.tf
+### main.tf
 
 Create a `main.tf` file in your the root of your folder. In your `main.tf` file there are 4 important resources that we will cover. They are:
 
@@ -78,9 +78,11 @@ Next up we will create a custom Docker network. This will allow us to create a n
 resource "docker_network" "repl_network" {
   name       = "repl-network"
   attachable = true
-  ipam_config { subnet = "10.42.10.0/16" }
+  ipam_config { subnet = var.network_cidr != "" ? var.network_cidr : "10.42.10.0/16" }
 }
 ```
+
+NOTE: You may run in to issues with existing virtual networks within your laptop if you run multiple containers. To account for this, we add a [conditional](https://developer.hashicorp.com/terraform/language/expressions/conditionals) to the ipam_config. This will allow you to set a custom CIDR in the vars.tf file you will create later.
 
 Next, we will declare the `docker_image`. This tells Docker where to get the image. We will keep it locally to save space. Notice the `${var.vault_version}` at the end of the `name` declaration.
 
@@ -235,6 +237,10 @@ variable "vault_license" {
 variable "vault_version" {
   default = "1.11.1-ent"
 }
+
+variable "network_cidr" {
+  default = ""
+}
 ```
 
 ### Config directory
@@ -268,7 +274,7 @@ This sets the internal API and Cluster addresses for the container. They are exp
 
 #### vault.hclic
 
-You can request a license from https://license.hashicorp.services. Please use your specific name and use the following modules:
+You can request a license from https://license.hashicorp.services. Please use your specific name and use the following modules in the flags section:
 
 ```
       {
@@ -283,7 +289,7 @@ You can request a license from https://license.hashicorp.services. Please use yo
 
 Save it as vault.hclic in the `config` directory.
 
-### Init.sh
+### init.sh
 
 Use this to init your cluster. For this exercise, we will start out with the following lines:
 
@@ -300,7 +306,7 @@ vault operator init -key-shares=1 -key-threshold=1 > vault/vault.tmp
 
 This will export your VAULT_ADDR address, run Terraform and then initialize Vault, storing the unseal and root keys in the `vault/vault.tmp` file.
 
-### Teardown.sh
+### teardown.sh
 
 For this example, we will want to remove all resources and created DBs. Since this is a single node, we only want to remove that nodes data.
 
